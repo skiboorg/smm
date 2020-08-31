@@ -121,7 +121,10 @@ def cp_networks_update(request):
     request_body = json.loads(request_unicode)
 
     network = SocialNetwork.objects.get(id=request_body['network_id'])
-    network.discount = int(request_body['data']['discount'])
+    if request_body['data']['discount']!='':
+        network.discount = int(request_body['data']['discount'])
+    else:
+        network.discount = 0
     network.slogan = request_body['data']['slogan']
     network.save()
 
