@@ -15,10 +15,18 @@ class Service(models.Model):
     social_network = models.ForeignKey(SocialNetwork,on_delete=models.CASCADE,blank=False,null=True,related_name='services')
     name = models.CharField(max_length=255, blank=False, null=True)
 
+    def get_low_price(self):
+        return self.tarifs.first().price
+    def get_discount(self):
+        return self.tarifs.first().price_w_discount
+    def tarif_id(self):
+        return self.tarifs.first().id
+
 class Tarif(models.Model):
     service = models.ForeignKey(Service,on_delete=models.CASCADE,blank=False,null=True,related_name='tarifs')
     name = models.CharField(max_length=255, blank=False, null=True)
     price = models.DecimalField(decimal_places=2,max_digits=5,default=0)
+    price_w_discount = models.DecimalField(decimal_places=2,max_digits=5,default=0)
     min = models.IntegerField(default=0)
     max = models.IntegerField(default=0)
     description = models.TextField(blank=True,null=True)
@@ -36,10 +44,11 @@ class Order(models.Model):
     service = models.ForeignKey(Service, on_delete=models.CASCADE, blank=False, null=True)
     tarif = models.ForeignKey(Tarif, on_delete=models.CASCADE, blank=False, null=True)
     total_number = models.IntegerField(default=0)
-    status = models.ForeignKey(Status,on_delete=models.CASCADE,blank=False,null=True)
+    status = models.ForeignKey(Status,on_delete=models.CASCADE,blank=True,null=True,default=1)
     url = models.CharField(max_length=255,blank=False,null=True)
     email = models.CharField(max_length=255,blank=False,null=True)
-    total_cost = models.DecimalField(decimal_places=2, max_digits=5, default=0)
+    total_cost = models.DecimalField(decimal_places=2, max_digits=10, default=0)
     is_new = models.BooleanField(default=True)
+    created_at = models.DateField(auto_now_add=True, null=True)
 
 

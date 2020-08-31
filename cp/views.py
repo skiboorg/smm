@@ -1,8 +1,14 @@
+import json
+import decimal
+from rest_framework.response import Response
+from rest_framework import generics
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth import login, logout,authenticate
 from django.http import  HttpResponseRedirect
 from .forms import *
+from .serializers import *
+from django.http import JsonResponse
 
 def cp_index(request):
     if request.user.is_authenticated:
@@ -14,6 +20,35 @@ def cp_index(request):
 def cp_orders(request):
     pageTitle = 'SMM-Orders'
     pageDescription = 'SMM'
+    networks = SocialNetwork.objects.all()
+    orders = Order.objects.all()
+    statuses = Status.objects.all()
+    cur_network_id=0
+
+    if request.GET.get('filter'):
+
+
+        if request.GET.get('network') != '0':
+            cur_network = SocialNetwork.objects.get(id=request.GET.get('network'))
+            cur_network_id = cur_network.id
+            cur_services = Service.objects.filter(social_network=cur_network)
+            orders = orders.filter(social_network_id=request.GET.get('network'))
+
+        if request.GET.get('service') != '0':
+            orders = orders.filter(service_id=request.GET.get('service'))
+
+        if request.GET.get('status') != '0':
+            orders = orders.filter(status_id=request.GET.get('status'))
+
+
+    else:
+
+        if request.GET.get('network'):
+            cur_network = SocialNetwork.objects.get(id=request.GET.get('network'))
+            cur_network_id = cur_network.id
+            cur_services = Service.objects.filter(social_network=cur_network)
+
+
     return render(request, 'cp/orders.html', locals())
 
 def cp_login(request):
@@ -73,10 +108,47 @@ def cp_add_service(request,network_id):
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     return render(request, 'cp/add_service.html', locals())
 
+def update_status(request):
+    request_unicode = request.body.decode('utf-8')
+    request_body = json.loads(request_unicode)
+    print(request_body)
+    order = Order.objects.get(id=request_body['order_id'])
+    order.status_id = int(request_body['status_id'])
+    order.save()
+    return JsonResponse({'status': 'ok'})
+def cp_networks_update(request):
+    request_unicode = request.body.decode('utf-8')
+    request_body = json.loads(request_unicode)
+
+    network = SocialNetwork.objects.get(id=request_body['network_id'])
+    network.discount = int(request_body['data']['discount'])
+    network.slogan = request_body['data']['slogan']
+    network.save()
+
+    for service in request_body['data']['services']:
+        print(service['id'])
+        service_obj = Service.objects.get(id=service['id'])
+        tarif_obj = Tarif.objects.get(id=service_obj.tarifs.first().id)
+        tarif_obj.price = decimal.Decimal(service['price'])
+        tarif_obj.price_w_discount = decimal.Decimal(service['price_w_discount'])
+        tarif_obj.save()
+    return JsonResponse({'status': 'ok'})
+
+
+class Cp_get_networks(generics.ListAPIView):
+    queryset = SocialNetwork.objects.all()
+    serializer_class = NetworksSerializer
+
+class Cp_get_network(generics.RetrieveAPIView):
+    queryset = SocialNetwork.objects.filter()
+    serializer_class = NetworkSerializer
+
+
 def cp_networks(request):
     pageTitle = 'SMM-All Networks'
     pageDescription = 'SMM'
-    networks = SocialNetwork.objects.all()
+
+
     return render(request, 'cp/networks.html', locals())
 def cp_add_network(request):
     if request.POST:
