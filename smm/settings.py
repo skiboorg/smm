@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import os
+import settings
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 
@@ -27,6 +28,11 @@ DEBUG = True
 LOGIN_URL = '/cp/login'
 CORS_ORIGIN_ALLOW_ALL = True
 ALLOWED_HOSTS = ['*']
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_HOST_USER = settings.SMTP_LOGIN
+EMAIL_HOST_PASSWORD = settings.SMTP_PASSWORD
+EMAIL_PORT = 465
+EMAIL_USE_SSL = True
 if not DEBUG:
     SECURE_SSL_REDIRECT = True
 

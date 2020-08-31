@@ -1,7 +1,8 @@
 from django.db import models
 import uuid
-
-
+from django.db.models.signals import post_save
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
 
 class SocialNetwork(models.Model):
     discount = models.IntegerField(default=0)
@@ -52,3 +53,22 @@ class Order(models.Model):
     created_at = models.DateField(auto_now_add=True, null=True)
 
 
+
+
+def order_post_save(sender, instance, created, **kwargs):
+    msg_html = render_to_string('email/client.html',{'uuid':instance.id})
+    send_mail(f'Заказ успешно размещен', None, 'support@ravesme.com',
+              [instance.email],
+              fail_silently=False, html_message=msg_html)
+    msg_html = render_to_string('email/admin.html', {'network': instance.social_network.name,
+                                                     'service': instance.service.name,
+                                                     'tarif': instance.tarif.name,
+                                                     'number': instance.total_number,
+                                                     'price': instance.total_cost,
+    })
+    send_mail(f'Новый заказ ', None, 'support@ravesme.com',
+              ['yusifowali@gmail.com'],
+              fail_silently=False, html_message=msg_html)
+
+
+post_save.connect(order_post_save, sender=Order)

@@ -267,7 +267,7 @@
 
                     },
                     async getNetwork(){
-                        let response = await fetch(`http://localhost:8080/cp/get_network/${this.network_id}`)
+                        let response = await fetch(`/cp/get_network/${this.network_id}`)
                         let network = await response.json()
                         console.log(network)
                         this.network = network

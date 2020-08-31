@@ -157,7 +157,7 @@
                 watch: {},
                 methods: {
                     async getNetworks(){
-                        let response = await fetch('http://localhost:8080/cp/get_networks')
+                        let response = await fetch('/cp/get_networks')
                         let networks = await response.json()
                         console.log(networks)
                         this.networks = networks
