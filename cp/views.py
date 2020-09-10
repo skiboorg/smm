@@ -21,7 +21,7 @@ def cp_orders(request):
     pageTitle = 'SMM-Orders'
     pageDescription = 'SMM'
     networks = SocialNetwork.objects.all()
-    orders = Order.objects.all()
+    orders = Order.objects.filter(is_payed=True)
     statuses = Status.objects.all()
     cur_network_id=0
 
@@ -70,6 +70,25 @@ def cp_restore(request):
     pageDescription = 'SMM'
     return render(request, 'cp/restore.html', locals())
 
+def cp_del_tarif(request,tarif_id):
+    tarif = Tarif.objects.get(id=tarif_id)
+    tarif.delete()
+    return HttpResponseRedirect(f'/cp/service/{tarif.service.id}')
+def cp_edit_tarif(request,tarif_id):
+    if request.POST:
+        print(tarif_id)
+        form = TarifAddForm(request.POST, instance=Tarif.objects.get(id=tarif_id))
+        if form.is_valid():
+            new_tarif = form.save()
+            return HttpResponseRedirect(f'/cp/service/{new_tarif.service.id}')
+        else:
+            print(form.errors)
+    pageTitle = 'SMM-Add Tarif'
+    pageDescription = 'SMM'
+    form = TarifAddForm()
+    tarif = Tarif.objects.get(id=tarif_id)
+    service = tarif.service
+    return render(request, 'cp/edit_tarif.html', locals())
 def cp_add_tarif(request,service_id):
     if request.POST:
         print(request.POST)
@@ -94,6 +113,11 @@ def cp_service(request,service_id):
     pageTitle = f'SMM-{service.name}'
     return render(request, 'cp/service.html', locals())
 
+
+def cp_del_network(request,network_id):
+    network = get_object_or_404(SocialNetwork, id=network_id)
+    network.delete()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 def cp_del_service(request,service_id):
     service = get_object_or_404(Service, id=service_id)
@@ -150,7 +174,6 @@ class Cp_get_network(generics.RetrieveAPIView):
 def cp_networks(request):
     pageTitle = 'SMM-All Networks'
     pageDescription = 'SMM'
-
 
     return render(request, 'cp/networks.html', locals())
 def cp_add_network(request):

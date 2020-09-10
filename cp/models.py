@@ -26,8 +26,8 @@ class Service(models.Model):
 class Tarif(models.Model):
     service = models.ForeignKey(Service,on_delete=models.CASCADE,blank=False,null=True,related_name='tarifs')
     name = models.CharField(max_length=255, blank=False, null=True)
-    price = models.DecimalField(decimal_places=2,max_digits=5,default=0)
-    price_w_discount = models.DecimalField(decimal_places=2,max_digits=5,default=0)
+    price = models.DecimalField(decimal_places=2,max_digits=10,default=0)
+    price_w_discount = models.DecimalField(decimal_places=2,max_digits=10,default=0)
     min = models.IntegerField(default=0)
     max = models.IntegerField(default=0)
     description = models.TextField(blank=True,null=True)
@@ -50,6 +50,7 @@ class Order(models.Model):
     email = models.CharField(max_length=255,blank=False,null=True)
     total_cost = models.DecimalField(decimal_places=2, max_digits=10, default=0)
     is_new = models.BooleanField(default=True)
+    is_payed = models.BooleanField(default=False)
     created_at = models.DateField(auto_now_add=True, null=True)
 
 
@@ -72,3 +73,15 @@ def order_post_save(sender, instance, created, **kwargs):
 
 
 post_save.connect(order_post_save, sender=Order)
+
+
+class Payment(models.Model):
+    payment_id=models.CharField(max_length=255,null=True,blank=True)
+    payment_url=models.TextField(null=True,blank=True)
+    order = models.ForeignKey(Order,on_delete=models.CASCADE,blank=False,null=True)
+    amount = models.DecimalField('Сумма', decimal_places=2,max_digits=10,default=0)
+    status = models.BooleanField('Статус платежа',default=False)
+    created_at = models.DateTimeField('Дата создания', auto_now_add=True, null=True)
+
+    class Meta:
+        ordering = ('-id',)

@@ -62,8 +62,13 @@
                                     <input type="hidden" name="network_id" value="{{ network.id }}">
                                     <div class="main-social__buttons">
                                         <svg width="17" height="18" viewBox="0 0 17 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.6373 7.23016C17.062 7.97999 17.062 10.02 15.6373 10.7698L2.9315 17.4571C1.59968 18.1581 0 17.1923 0 15.6873V2.31273C0 0.807706 1.59967 -0.158067 2.93149 0.542891L15.6373 7.23016Z" fill="white"/></svg>
-                                        <span @click="updateNetwork(network.id)" class="main-btn">Düzəliş et</span>
-                                        <span @click="updateNetwork(network.id)" class="main-btn">Yadda saxla</span>
+
+                                <a :href="'/cp/del_network/'+network.id" class="main-btn main-btn__second">
+                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M14.1667 4.16675V3.33341C14.1667 2.41294 13.4205 1.66675 12.5 1.66675H7.5C6.57952 1.66675 5.83333 2.41294 5.83333 3.33341V4.16675H3.33333C2.8731 4.16675 2.5 4.53985 2.5 5.00008C2.5 5.46031 2.8731 5.83341 3.33333 5.83341H4.16667V15.0001C4.16667 16.3808 5.28596 17.5001 6.66667 17.5001H13.3333C14.7141 17.5001 15.8333 16.3808 15.8333 15.0001V5.83341H16.6667C17.1269 5.83341 17.5 5.46031 17.5 5.00008C17.5 4.53985 17.1269 4.16675 16.6667 4.16675H14.1667ZM12.5 3.33341H7.5V4.16675H12.5V3.33341ZM14.1667 5.83341H5.83333V15.0001C5.83333 15.4603 6.20643 15.8334 6.66667 15.8334H13.3333C13.7936 15.8334 14.1667 15.4603 14.1667 15.0001V5.83341Z" fill="white"></path><path d="M7.5 7.5H9.16667V14.1667H7.5V7.5Z" fill="white"></path><path d="M10.834 7.5H12.5007V14.1667H10.834V7.5Z" fill="white"></path></svg>
+                                    ləğv et
+                                </a>
+
+                                        <span style="cursor: pointer" @click="updateNetwork(network.id)" class="main-btn">Yadda saxla</span>
                                     </div>
                                 </form>
                             </div>

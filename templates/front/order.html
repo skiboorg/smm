@@ -35,7 +35,7 @@
 										<label for="r-1">Xidməti seçin:</label>
 										<div class="select">
 											<div class="select-top">
-												<div class="select-text">İzləyicilər</div>
+												<div class="select-text">xidməti seçin</div>
 											<div class="select-arrow"><svg width="8" height="5" viewBox="0 0 8 5" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.41421 0C0.523309 0 0.077142 1.07714 0.707107 1.70711L3.29289 4.29289C3.68342 4.68342 4.31658 4.68342 4.70711 4.29289L7.2929 1.70711C7.92286 1.07714 7.47669 0 6.58579 0H1.41421Z" fill="#FE8D36"/></svg></div>
 											</div>
 											<div class="select-info">
@@ -58,7 +58,7 @@
 											<label for="r-1">Tarifi seçin:</label>
 											<div class="select">
 												<div class="select-top">
-													<div class="select-text">Start +</div>
+													<div class="select-text">tarifi seçin</div>
 												<div class="select-arrow"><svg width="8" height="5" viewBox="0 0 8 5" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.41421 0C0.523309 0 0.077142 1.07714 0.707107 1.70711L3.29289 4.29289C3.68342 4.68342 4.31658 4.68342 4.70711 4.29289L7.2929 1.70711C7.92286 1.07714 7.47669 0 6.58579 0H1.41421Z" fill="#FE8D36"/></svg></div>
 												</div>
 												<div class="select-info">
@@ -120,12 +120,14 @@
 										<label for="f-3"></label>
 										<input type="text" name="text" readonly v-model="total_price" placeholder="Ümumi: 99.9 AZN">
 									</div>
-									<div class="payment-btn">
-										<a @click="createOrder" class="main-btn">
+									<div style="margin-bottom: 20px" class="payment-btn " :class="{'hidden':sending}">
+										<a style="cursor: pointer" @click="createOrder" class="main-btn" >
 											Sifariş et
 											<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16.1373 7.23016C17.562 7.97999 17.562 10.02 16.1373 10.7698L3.4315 17.4571C2.09968 18.1581 0.5 17.1923 0.5 15.6873V2.31273C0.5 0.807706 2.09967 -0.158067 3.43149 0.542891L16.1373 7.23016Z" fill="white"/></svg>
 										</a>
+
 									</div>
+                                    <p style="text-align: center;font-weight: bold;color: red">[[error_message]]</p>
 								</form>
 							</div>
 						</div>
@@ -182,6 +184,8 @@
                     current_service_name:'',
                     current_tarif:0,
                     current_tarifs:[],
+                    error_message:'',
+                    sending:false,
                     network:[
 
 
@@ -213,6 +217,11 @@
 
                 methods: {
                     createOrder(){
+                        if (this.email==='' && this.link===''){
+                            this.error_message = 'Заполните все поля'
+                            return
+                        }
+                        this.sending=true
                         let body = {
                             network_id:this.network_id,
                             service:this.current_service,
@@ -230,7 +239,8 @@
                             credentials: 'same-origin'
                         }).then(res=>res.json())
                             .then(res => {
-                                console.log(res)
+
+                                window.location.href = res['url']
                             }).then( tt => {
                                 console.log('then')
                             }
