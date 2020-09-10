@@ -20,6 +20,7 @@ urlpatterns = [
     path('edit_tarif/<tarif_id>', views.cp_edit_tarif, name='cp_edit_tarif'),
     path('del_tarif/<tarif_id>', views.cp_del_tarif, name='cp_del_tarif'),
     path('login', views.cp_login, name='cp_login'),
+    path('pay_complete/<pay_id>', views.pay_complete, name='pay_complete'),
     path('restore', views.cp_restore, name='cp_restore'),
 
    

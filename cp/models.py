@@ -40,7 +40,7 @@ class Status(models.Model):
     css_class = models.CharField(max_length=255, blank=False, null=True)
 
 class Order(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    uu = models.CharField(max_length=255,default=uuid.uuid4)
     social_network = models.ForeignKey(SocialNetwork,on_delete=models.CASCADE,blank=False,null=True)
     service = models.ForeignKey(Service, on_delete=models.CASCADE, blank=False, null=True)
     tarif = models.ForeignKey(Tarif, on_delete=models.CASCADE, blank=False, null=True)
@@ -57,19 +57,21 @@ class Order(models.Model):
 
 
 def order_post_save(sender, instance, created, **kwargs):
-    msg_html = render_to_string('email/client.html',{'uuid':instance.id})
-    send_mail(f'Заказ успешно размещен', None, 'support@ravesme.com',
-              [instance.email],
-              fail_silently=False, html_message=msg_html)
     msg_html = render_to_string('email/admin.html', {'network': instance.social_network.name,
                                                      'service': instance.service.name,
                                                      'tarif': instance.tarif.name,
                                                      'number': instance.total_number,
                                                      'price': instance.total_cost,
-    })
+                                                     })
     send_mail(f'Новый заказ ', None, 'support@ravesme.com',
               ['yusifowali@gmail.com'],
               fail_silently=False, html_message=msg_html)
+    if instance.is_payed:
+        msg_html = render_to_string('email/client.html',{'uuid':instance.uu})
+        send_mail(f'Заказ успешно размещен', None, 'support@ravesme.com',
+                  [instance.email],
+                  fail_silently=False, html_message=msg_html)
+
 
 
 post_save.connect(order_post_save, sender=Order)

@@ -4,7 +4,7 @@ from datetime import datetime,timedelta
 import requests
 from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
-from cp.models import SocialNetwork,Order,Payment
+from cp.models import *
 import settings
 from django.utils.http import urlquote
 from urllib.request import urlopen
@@ -14,12 +14,21 @@ def index(request):
     pageTitle = 'SMM'
     pageDescription = 'SMM'
     networks = SocialNetwork.objects.all()
+    if request.GET.get('pay_complete'):
+        try:
+            order = Order.objects.get(uu=request.GET.get('pay_complete'))
+            if not order.is_payed:
+                order.is_payed=True
+                order.save()
+        except:
+            pass
+
     return render(request, 'front/index.html', locals())
 
 def status(request,order_id):
     pageTitle = 'SMM'
     pageDescription = 'SMM'
-    order = Order.objects.get(id=order_id)
+    order = Order.objects.get(uu=order_id)
     return render(request, 'front/status.html', locals())
 def new_order(request):
     request_unicode = request.body.decode('utf-8')
@@ -27,25 +36,35 @@ def new_order(request):
     print(request_body)
     var_url = urlopen('https://www.cbr-xml-daily.ru/daily_utf8.xml')
     xmldoc = parse(var_url)
-    rate = 45
-    for item in xmldoc.iterfind('Valute'):
-        title = item.findtext('CharCode')
-        if title == 'AZN':
-            rate = item.findtext('Value')
-            print(rate)
-            continue
-    rate=rate.replace(',','.')
+    rate = 1
+    # for item in xmldoc.iterfind('Valute'):
+    #     title = item.findtext('CharCode')
+    #     if title == 'AZN':
+    #         rate = item.findtext('Value')
+    #         print(rate)
+    #         continue
+    # rate=rate.replace(',','.')
     total_cost=decimal.Decimal(request_body['total_cost']) * decimal.Decimal(rate)
     total_cost = f'{"{:.2f}".format(round(float(total_cost), 2))}'
     print(total_cost)
-    new_order=Order.objects.create(social_network_id=request_body['network_id'],
-                         service_id=request_body['service'],
-                         tarif_id=request_body['tarif'],
+    network=SocialNetwork.objects.get(id=request_body['network_id'])
+
+    print(network)
+    service = Service.objects.get(id=request_body['service'])
+
+    print(service)
+    tarif = Tarif.objects.get(id=request_body['tarif'])
+    print(tarif)
+
+    new_order=Order.objects.create(social_network=network,
+                         service=service,
+                         tarif=tarif,
                          total_number=request_body['total_number'],
                          url=request_body['url'],
                          email=request_body['email'],
                          total_cost=decimal.Decimal(request_body['total_cost']),
                          )
+    print('order created')
     new_pay = Payment.objects.create(order=new_order,
                                      amount=float(request_body['total_cost'])
                                      )
@@ -60,11 +79,11 @@ def new_order(request):
             "currency": "RUB",
             "value": total_cost #f'{"{:.2f}".format(round(float(request_body["total_cost"]), 2))}'
         },
-        "comment": f'Пополнение счета {request.user.first_name} {request.user.last_name}. Номер : {new_pay.id}',
+        "comment": f'Оплата услуги {new_order.service.name}',
         "expirationDateTime": f"{(datetime.now() + timedelta(hours=3)).strftime('%Y-%m-%dT%H:%M:%S+03:00')}",
         "customer": {
             'email': request_body['email'],
-            'account': request_body['email'],
+            'account': new_pay.id,
         },
         "customFields": {},
     }
@@ -72,7 +91,7 @@ def new_order(request):
                            data=json.dumps(data))
     print(respond.json())
     pay_url = respond.json()['payUrl']
-    return_url = urlquote(u'{}qiwi&pid={}'.format(settings.SUCCES_URL, new_pay.payment_id))
+    return_url = urlquote(u'{}?pay_complete={}'.format(settings.SUCCES_URL, new_order.uu))
     full_url = f'{pay_url}&paySource=qw&allowedPaySources=qw&successUrl={return_url}'
 
     return JsonResponse({'url':full_url}, safe=False)

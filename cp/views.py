@@ -9,6 +9,8 @@ from django.http import  HttpResponseRedirect
 from .forms import *
 from .serializers import *
 from django.http import JsonResponse
+import  settings
+import requests
 
 def cp_index(request):
     if request.user.is_authenticated:
@@ -21,28 +23,36 @@ def cp_orders(request):
     pageTitle = 'SMM-Orders'
     pageDescription = 'SMM'
     networks = SocialNetwork.objects.all()
+
+    # payments = Payment.objects.filter(status=False)
+    # for payment in payments:
+    #     headers = {
+    #         'Content-Type': 'application/json',
+    #         'Accept': 'application/json',
+    #         "Authorization": f'Bearer {settings.QIWI_SECRET}'
+    #     }
+    #     request_qiwi = requests.get(f'https://api.qiwi.com/partner/bill/v1/bills/{payment.id}', headers=headers)
+    #     respond = request_qiwi.json()
+    #     if respond['status']['value'] == 'PAID':
+    #         payment.status = True
+    #         payment.save()
+    #         payment.order.is_payed=True
+    #         payment.order.save()
+
     orders = Order.objects.filter(is_payed=True)
     statuses = Status.objects.all()
     cur_network_id=0
-
     if request.GET.get('filter'):
-
-
         if request.GET.get('network') != '0':
             cur_network = SocialNetwork.objects.get(id=request.GET.get('network'))
             cur_network_id = cur_network.id
             cur_services = Service.objects.filter(social_network=cur_network)
             orders = orders.filter(social_network_id=request.GET.get('network'))
-
         if request.GET.get('service') != '0':
             orders = orders.filter(service_id=request.GET.get('service'))
-
         if request.GET.get('status') != '0':
             orders = orders.filter(status_id=request.GET.get('status'))
-
-
     else:
-
         if request.GET.get('network'):
             cur_network = SocialNetwork.objects.get(id=request.GET.get('network'))
             cur_network_id = cur_network.id
@@ -65,6 +75,10 @@ def cp_login(request):
 
     return render(request, 'cp/login.html', locals())
 
+def pay_complete(request,pay_id):
+    print(request.GET)
+    print(request.POST)
+    print(pay_id)
 def cp_restore(request):
     pageTitle = 'SMM-Restore'
     pageDescription = 'SMM'

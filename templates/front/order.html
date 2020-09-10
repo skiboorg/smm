@@ -239,6 +239,7 @@
                             credentials: 'same-origin'
                         }).then(res=>res.json())
                             .then(res => {
+                                console.log(res['url'])
 
                                 window.location.href = res['url']
                             }).then( tt => {
