@@ -26,6 +26,7 @@ class Service(models.Model):
 class Tarif(models.Model):
     service = models.ForeignKey(Service,on_delete=models.CASCADE,blank=False,null=True,related_name='tarifs')
     name = models.CharField(max_length=255, blank=False, null=True)
+    input_name = models.CharField(max_length=255, blank=False, null=True)
     price = models.DecimalField(decimal_places=2,max_digits=10,default=0)
     price_w_discount = models.DecimalField(decimal_places=2,max_digits=10,default=0)
     min = models.IntegerField(default=0)

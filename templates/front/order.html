@@ -91,8 +91,8 @@
 										</div>
 									</div>
 									<div class="input-block">
-										<label for="r-2">Profil linki:</label>
-										<input id="r-2" type="text" v-model="link" name="text" placeholder="https://www.facebook.com/*****">
+										<label for="r-2">[[input_name]]:</label>
+										<input id="r-2" type="text" v-model="link" name="text" placeholder="">
 									</div>
 									<div class="input-block">
 										<label for="r-3">Email:</label>
@@ -176,6 +176,7 @@
                     max:0,
                     tarif_name:'Выберите тариф',
                     description:'Выберите тариф',
+                    input_name:'',
                     total_num:0,
                     link:'',
                     email:'',
@@ -272,6 +273,7 @@
                     this.price=tarif.price
                     this.price_w_discount=tarif.price_w_discount
                     this.total_num=tarif.min
+                    this.input_name=tarif.input_name
                     this.min=tarif.min
                     this.max=tarif.max
                     this.description=tarif.description

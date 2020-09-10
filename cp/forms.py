@@ -17,6 +17,7 @@ class TarifAddForm(ModelForm):
         model = Tarif
         fields = ('name',
                   'price',
+                  'input_name',
                   'min',
                   'max',
                   'description',
