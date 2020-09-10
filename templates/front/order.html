@@ -35,7 +35,7 @@
 										<label for="r-1">Xidməti seçin:</label>
 										<div class="select">
 											<div class="select-top">
-												<div class="select-text">xidməti seçin</div>
+												<div class="select-text">[[current_service_name]]</div>
 											<div class="select-arrow"><svg width="8" height="5" viewBox="0 0 8 5" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.41421 0C0.523309 0 0.077142 1.07714 0.707107 1.70711L3.29289 4.29289C3.68342 4.68342 4.31658 4.68342 4.70711 4.29289L7.2929 1.70711C7.92286 1.07714 7.47669 0 6.58579 0H1.41421Z" fill="#FE8D36"/></svg></div>
 											</div>
 											<div class="select-info">
@@ -58,7 +58,7 @@
 											<label for="r-1">Tarifi seçin:</label>
 											<div class="select">
 												<div class="select-top">
-													<div class="select-text">tarifi seçin</div>
+													<div class="select-text">[[tarif_name]]</div>
 												<div class="select-arrow"><svg width="8" height="5" viewBox="0 0 8 5" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.41421 0C0.523309 0 0.077142 1.07714 0.707107 1.70711L3.29289 4.29289C3.68342 4.68342 4.31658 4.68342 4.70711 4.29289L7.2929 1.70711C7.92286 1.07714 7.47669 0 6.58579 0H1.41421Z" fill="#FE8D36"/></svg></div>
 												</div>
 												<div class="select-info">
@@ -91,31 +91,31 @@
 										</div>
 									</div>
 									<div class="input-block">
-										<label for="r-2">[[input_name]]:</label>
+										<label for="r-2">[[input_name]]</label>
 										<input id="r-2" type="text" v-model="link" name="text" placeholder="">
 									</div>
 									<div class="input-block">
 										<label for="r-3">Email:</label>
 										<input id="r-3" type="email" v-model="email" name="email">
 									</div>
-									<div class="input-block">
-										<label for="d-1">Ödəniş üsulu:</label>
-										<div class="select">
-											<div class="select-top">
-												<div class="select-text">Seçilməyib</div>
-											<div class="select-arrow"><svg width="8" height="5" viewBox="0 0 8 5" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.41421 0C0.523309 0 0.077142 1.07714 0.707107 1.70711L3.29289 4.29289C3.68342 4.68342 4.31658 4.68342 4.70711 4.29289L7.2929 1.70711C7.92286 1.07714 7.47669 0 6.58579 0H1.41421Z" fill="#FE8D36"/></svg></div>
-											</div>
-											<div class="select-info">
-												<div class="select-info__wrap scrollbar-outer">
-													<ul>
-														<li>Qiwi</li>
-
-													</ul>
-												</div>
-											</div>
-											<input type="text" class="select-value">
-										</div>
-									</div>
+{#									<div class="input-block">#}
+{#										<label for="d-1">Ödəniş üsulu:</label>#}
+{#										<div class="select">#}
+{#											<div class="select-top">#}
+{#												<div class="select-text">Seçilməyib</div>#}
+{#											<div class="select-arrow"><svg width="8" height="5" viewBox="0 0 8 5" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.41421 0C0.523309 0 0.077142 1.07714 0.707107 1.70711L3.29289 4.29289C3.68342 4.68342 4.31658 4.68342 4.70711 4.29289L7.2929 1.70711C7.92286 1.07714 7.47669 0 6.58579 0H1.41421Z" fill="#FE8D36"/></svg></div>#}
+{#											</div>#}
+{#											<div class="select-info">#}
+{#												<div class="select-info__wrap scrollbar-outer">#}
+{#													<ul>#}
+{#														<li>Qiwi</li>#}
+{##}
+{#													</ul>#}
+{#												</div>#}
+{#											</div>#}
+{#											<input type="text" class="select-value">#}
+{#										</div>#}
+{#									</div>#}
 									<div class="input-block">
 										<label for="f-3"></label>
 										<input type="text" name="text" readonly v-model="total_price" placeholder="Ümumi: 99.9 AZN">
@@ -188,8 +188,6 @@
                     error_message:'',
                     sending:false,
                     network:[
-
-
                     ]
                 },
             watch: {
@@ -213,8 +211,10 @@
                         console.log('mount')
                         console.log(this.network)
 
+
                     })
                 },
+
 
                 methods: {
                     createOrder(){
@@ -270,13 +270,13 @@
                         console.log(tarif)
                         this.current_tarif = tarif.id
                         this.tarif_name = tarif.name
-                    this.price=tarif.price
-                    this.price_w_discount=tarif.price_w_discount
-                    this.total_num=tarif.min
-                    this.input_name=tarif.input_name
-                    this.min=tarif.min
-                    this.max=tarif.max
-                    this.description=tarif.description
+                        this.price=tarif.price
+                        this.price_w_discount=tarif.price_w_discount
+                        this.total_num=tarif.min
+                        this.input_name=tarif.input_name
+                        this.min=tarif.min
+                        this.max=tarif.max
+                        this.description=tarif.description
 
                     },
                     async getNetwork(){
@@ -284,8 +284,10 @@
                         let network = await response.json()
                         console.log(network)
                         this.network = network
-
-
+                        this.changeService(this.network.services[0].id)
+                        this.current_service_name = this.network.services[0].name
+                        this.chahgeTarif(this.network.services[0].tarifs[0].id)
+                        this.tarif_name = this.network.services[0].tarifs[0].name
                     },
 
                 }
