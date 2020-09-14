@@ -18,6 +18,7 @@ class TarifAddForm(ModelForm):
         fields = ('name',
                   'price',
                   'input_name',
+                  'is_textarea',
                   'min',
                   'max',
                   'description',

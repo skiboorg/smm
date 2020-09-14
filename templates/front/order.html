@@ -90,6 +90,10 @@
 											<div @click="plusNum" class="input-plus"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="white"/></svg></div>
 										</div>
 									</div>
+                                    <div v-if="is_textarea" class="input-block">
+                                        <label for="f-4">Поле для комментария:</label>
+                                        <textarea  v-model="text" name="text1" id="f-4"></textarea>
+                                    </div>
 									<div class="input-block">
 										<label for="r-2">[[input_name]]</label>
 										<input id="r-2" type="text" v-model="link" name="text" placeholder="">
@@ -173,14 +177,19 @@
                     price:0,
                     price_w_discount:0,
                     min:0,
+                    is_textarea:null,
                     max:0,
+                    lines:0,
                     tarif_name:'Выберите тариф',
                     description:'Выберите тариф',
                     input_name:'',
                     total_num:0,
                     link:'',
                     email:'',
+                    text:'',
                     total_price:0,
+                    sub_total_price:0,
+                    lines_price:0,
                     current_service:0,
                     current_service_name:'',
                     current_tarif:0,
@@ -191,13 +200,36 @@
                     ]
                 },
             watch: {
+                    text: function(val){
+                       let enteredTextEncoded =  escape(val)
+                       let linebreaks = enteredTextEncoded.match(/%0A/g);
+                       let numberOfLineBreaks
+                       (linebreaks != null) ? numberOfLineBreaks = linebreaks.length : numberOfLineBreaks = 0
+                        this.lines = numberOfLineBreaks
+
+                    },
+                    lines: function(val){
+                        console.log(val)
+                        if (parseFloat(this.price_w_discount) === 0){
+                          this.lines_price = parseFloat(val) * parseFloat(this.price)
+                        }else {
+                            this.lines_price = parseFloat(val) * parseFloat(this.price_w_discount)
+                        }
+
+                    },
+                lines_price: function(val){
+                        console.log(val)
+                        this.total_price = parseFloat(this.sub_total_price) + parseFloat(this.lines_price)
+                },
 
                 total_num: function () {
 
                     if( parseFloat(this.price_w_discount) === 0){
-                        this.total_price = (this.total_num * this.price).toFixed(2)
+                        this.sub_total_price = (this.total_num * this.price).toFixed(2)
+                        this.total_price = parseFloat(this.sub_total_price) + parseFloat(this.lines_price)
                     } else{
-                        this.total_price = (this.total_num * this.price_w_discount).toFixed(2)
+                        this.sub_total_price = (this.total_num * this.price_w_discount).toFixed(2)
+                        this.total_price = parseFloat(this.sub_total_price) + parseFloat(this.lines_price)
                     }
 
 
@@ -217,6 +249,9 @@
 
 
                 methods: {
+                    calcLine(){
+
+                    },
                     createOrder(){
                         if (this.email==='' && this.link===''){
                             this.error_message = 'Заполните все поля'
@@ -228,6 +263,7 @@
                             service:this.current_service,
                             tarif:this.current_tarif,
                             total_number:this.total_num,
+                            text:this.text,
                             url:this.link,
                             email:this.email,
                             total_cost:this.total_price,
@@ -277,6 +313,7 @@
                         this.min=tarif.min
                         this.max=tarif.max
                         this.description=tarif.description
+                        this.is_textarea=tarif.is_textarea
 
                     },
                     async getNetwork(){

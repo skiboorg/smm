@@ -59,6 +59,7 @@ def new_order(request):
     new_order=Order.objects.create(social_network=network,
                          service=service,
                          tarif=tarif,
+                         text=request_body['text'],
                          total_number=request_body['total_number'],
                          url=request_body['url'],
                          email=request_body['email'],

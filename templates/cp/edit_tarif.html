@@ -87,6 +87,10 @@
                                     <label for="f-1">Название для поля с урлом :</label>
                                     <input id="f-1" type="text" required name="{{ form.input_name.name }}" value="{{ tarif.input_name }}">
                                 </div>
+                                <label style="margin-bottom: 20px;display: block;" class="checkbox-block">
+                                    <input type="checkbox" name="{{ form.is_textarea.name }}" {% if tarif.is_textarea %} checked{% endif %}>
+                                    <span>Нужно ли текстовое поле для комментария </span>
+                                </label>
                                 <div class="rate-form__small">
                                     <div class="input-block">
                                         <label for="f-2">Məhsulun bir vahidinin qiyməti:</label>

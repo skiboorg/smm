@@ -2928,6 +2928,12 @@ input::-webkit-outer-spin-button {
 input[type="number"] {
     -moz-appearance: textfield;
 }
+.main-slider1 {
+    overflow: auto;
+}
+.main-slider1 .main-slide__wrap {
+    height: 100vh;
+}
 @media only screen and (max-width: 1360px) {
     .main-slider .slick-arrow {
         top: auto;
@@ -3158,12 +3164,12 @@ input[type="number"] {
     color: #fff;
     font-size: 14px;
 }
-.checkbox,
+/* .checkbox, */
 .radio {
     display: block;
     position: relative;
 }
-.checkbox-ico,
+/* .checkbox-ico, */
 .radio-ico {
     display: block;
     position: absolute;
@@ -3173,7 +3179,7 @@ input[type="number"] {
     -o-transition: 0.3s ease-in-out;
     transition: 0.3s ease-in-out;
 }
-.checkbox input,
+/* .checkbox input, */
 .radio input {
     position: absolute;
     top: 0;
@@ -3183,8 +3189,13 @@ input[type="number"] {
     opacity: 0;
     cursor: pointer;
     z-index: 2;
+} 
+.checkbox-block input{
+    -webkit-appearance: auto;
+    -moz-appearance: auto;
+    appearance: auto;
 }
-.checkbox {
+/* .checkbox {
     padding: 0 0 0 26px;
 }
 .checkbox-ico {
@@ -3206,7 +3217,7 @@ input[type="number"] {
 }
 .checkbox input:checked + .checkbox-ico svg {
     opacity: 1;
-}
+} */
 .radio {
     padding: 0 0 0 26px;
 }

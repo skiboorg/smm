@@ -29,6 +29,8 @@ class Tarif(models.Model):
     input_name = models.CharField(max_length=255, blank=False, null=True)
     price = models.DecimalField(decimal_places=2,max_digits=10,default=0)
     price_w_discount = models.DecimalField(decimal_places=2,max_digits=10,default=0)
+    is_textarea = models.BooleanField(default=False)
+
     min = models.IntegerField(default=0)
     max = models.IntegerField(default=0)
     description = models.TextField(blank=True,null=True)
@@ -47,6 +49,7 @@ class Order(models.Model):
     tarif = models.ForeignKey(Tarif, on_delete=models.CASCADE, blank=False, null=True)
     total_number = models.IntegerField(default=0)
     status = models.ForeignKey(Status,on_delete=models.CASCADE,blank=True,null=True,default=1)
+    text = models.TextField(blank=True, null=True)
     url = models.CharField(max_length=255,blank=False,null=True)
     email = models.CharField(max_length=255,blank=False,null=True)
     total_cost = models.DecimalField(decimal_places=2, max_digits=10, default=0)
