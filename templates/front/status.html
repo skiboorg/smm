@@ -73,17 +73,17 @@
 						<div class="main-statistics__bg main-statistics__bg-mob"><svg width="344" height="283" viewBox="0 0 344 283" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 30C0 13.4314 13.4315 0 30 0H314C330.569 0 344 13.4315 344 30V141.5V253C344 269.569 330.569 283 314 283H30C13.4315 283 0 269.569 0 253V30Z" fill="url(#knpew3)"/><defs><linearGradient id="knpew3" x1="172" y1="2.06282e-07" x2="175.136" y2="590.688" gradientUnits="userSpaceOnUse"><stop stop-color="#FFF0F0"/><stop offset="1" stop-color="#FFF0F0" stop-opacity="0"/></linearGradient></defs></svg></div>
 						<div class="main-statistics__block">
 							<div class="main-statistics__block-top">
-								<span class="main-statistics__block-title">Process</span>
+								<span class="main-statistics__block-title">Статус заказа : {{ order.status.name }}</span>
 							</div>
 							<div class="main-statistics__block-center">
 								<div class="main-statistics__block-wrap">
 									<div class="statistics-circle">
-										<span class="status-num">350</span>
+										<span class="status-num">{{ order.total_number }}</span>
 										<div class="statistics-ico__wrap" id="statistics"></div>
 									</div>
 									<div class="statistics-text">
 										<span>0%</span>
-										<span>Dostların artırılması</span>
+										<span>{{ order.service.name }}</span>
 										<span>100%</span>
 									</div>
 								</div>

@@ -15,6 +15,7 @@ def index(request):
     pageDescription = 'SMM'
     networks = SocialNetwork.objects.all()
     if request.GET.get('pay_complete'):
+        text = 'На вашу почту отправлена ссылка со статусом заказа'
         try:
             order = Order.objects.get(uu=request.GET.get('pay_complete'))
             if not order.is_payed:
