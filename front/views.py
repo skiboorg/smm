@@ -15,6 +15,8 @@ def index(request):
     pageDescription = 'SMM'
     networks = SocialNetwork.objects.all()
     if request.GET.get('pay_complete'):
+        show_button = True
+        order_id = request.GET.get('pay_complete')
         text = 'На вашу почту отправлена ссылка со статусом заказа'
         try:
             order = Order.objects.get(uu=request.GET.get('pay_complete'))
@@ -37,14 +39,14 @@ def new_order(request):
     print(request_body)
     var_url = urlopen('https://www.cbr-xml-daily.ru/daily_utf8.xml')
     xmldoc = parse(var_url)
-    rate = 1
-    # for item in xmldoc.iterfind('Valute'):
-    #     title = item.findtext('CharCode')
-    #     if title == 'AZN':
-    #         rate = item.findtext('Value')
-    #         print(rate)
-    #         continue
-    # rate=rate.replace(',','.')
+    rate = None
+    for item in xmldoc.iterfind('Valute'):
+        title = item.findtext('CharCode')
+        if title == 'AZN':
+            rate = item.findtext('Value')
+            print(rate)
+            continue
+    rate=rate.replace(',','.')
     total_cost=decimal.Decimal(request_body['total_cost']) * decimal.Decimal(rate)
     total_cost = f'{"{:.2f}".format(round(float(total_cost), 2))}'
     print(total_cost)
@@ -76,6 +78,7 @@ def new_order(request):
         "Authorization": f'Bearer {settings.QIWI_SECRET}'
     }
     print('data',(datetime.now() + timedelta(hours=3)).strftime('%Y-%m-%dT%H:%M:%S+03:00'))
+    print('total_cost',total_cost)
     data = {
         "amount": {
             "currency": "RUB",
