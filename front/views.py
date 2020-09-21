@@ -49,7 +49,7 @@ def new_order(request):
     rate=rate.replace(',','.')
     total_cost=decimal.Decimal(request_body['total_cost']) * decimal.Decimal(rate)
     total_cost = f'{"{:.2f}".format(round(float(total_cost), 2))}'
-    print(total_cost)
+    print('total_cost',total_cost)
     network=SocialNetwork.objects.get(id=request_body['network_id'])
 
     print(network)
@@ -85,7 +85,7 @@ def new_order(request):
             "value": total_cost #f'{"{:.2f}".format(round(float(request_body["total_cost"]), 2))}'
         },
         "comment": f'Оплата услуги {new_order.service.name}',
-        "expirationDateTime": f"{(datetime.now() + timedelta(hours=3)).strftime('%Y-%m-%dT%H:%M:%S+03:00')}",
+        "expirationDateTime": (datetime.now() + timedelta(days=1)).strftime('%Y-%m-%dT%H:%M:%S+03:00'),
         "customer": {
             'email': request_body['email'],
             'account': new_pay.id,
