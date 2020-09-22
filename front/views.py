@@ -95,7 +95,7 @@ def new_order(request):
                            data=json.dumps(data))
     print(respond.json())
     pay_url = respond.json()['payUrl']
-    return_url = urlquote(u'{}?pay_complete={}'.format(settings.SUCCES_URL, new_order.uu))
+    return_url = urlquote(u'{}/{}?pay_complete={}'.format(settings.SUCCES_URL,new_order.uu, new_order.uu))
     full_url = f'{pay_url}&paySource=card&allowedPaySources=qw,card&successUrl={return_url}'
 
     return JsonResponse({'url':full_url}, safe=False)
