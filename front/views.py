@@ -14,21 +14,20 @@ def index(request):
     pageTitle = 'SMM'
     pageDescription = 'SMM'
     networks = SocialNetwork.objects.all()
-    if request.GET.get('pay_complete'):
-        show_button = True
-        order_id = request.GET.get('pay_complete')
-        text = 'На вашу почту отправлена ссылка со статусом заказа'
-        try:
-            order = Order.objects.get(uu=request.GET.get('pay_complete'))
-            if not order.is_payed:
-                order.is_payed=True
-                order.save()
-        except:
-            pass
 
     return render(request, 'front/index.html', locals())
 
 def status(request,order_id):
+    if request.GET.get('pay_complete'):
+        order_id = request.GET.get('pay_complete')
+        try:
+            order = Order.objects.get(uu=request.GET.get('pay_complete'))
+            if not order.is_payed:
+                show_text = True
+                order.is_payed=True
+                order.save()
+        except:
+            pass
     pageTitle = 'SMM'
     pageDescription = 'SMM'
     order = Order.objects.get(uu=order_id)
