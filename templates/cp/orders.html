@@ -107,6 +107,11 @@
                                 <img src="{{ order.social_network.icon.url }}" alt="">
                                 {{ order.social_network.name }}
 							</div>
+                            {% if order.text %}
+                            <div class="networks-main__col networks-main__col-3">
+                                <a href="#" @click.prevent="comment = '{{ order.text }}'" class="modal_btn" data-target='modal_id'>комментарий</a>
+                            </div>
+                            {% endif %}
 							<div class="networks-main__col networks-main__col-3">
 								<svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.54777 2.48218C3.10574 2.48218 2.68182 2.65777 2.36926 2.97033C2.0567 3.28289 1.8811 3.70682 1.8811 4.14884V12.4822H3.54777V4.14884H11.8811V2.48218H3.54777ZM6.8811 5.81551C6.43908 5.81551 6.01515 5.99111 5.70259 6.30367C5.39003 6.61623 5.21444 7.04015 5.21444 7.48218V15.8155H6.8811V7.48218H15.2144V5.81551H6.8811ZM16.8811 10.8155V17.4822H10.2144V10.8155H16.8811ZM16.8811 9.14884H10.2144C9.77241 9.14884 9.34849 9.32444 9.03593 9.637C8.72337 9.94956 8.54777 10.3735 8.54777 10.8155V17.4822C8.54777 17.9242 8.72337 18.3481 9.03593 18.6607C9.34849 18.9732 9.77241 19.1488 10.2144 19.1488H16.8811C17.3231 19.1488 17.7471 18.9732 18.0596 18.6607C18.3722 18.3481 18.5478 17.9242 18.5478 17.4822V10.8155C18.5478 10.3735 18.3722 9.94956 18.0596 9.637C17.7471 9.32444 17.3231 9.14884 16.8811 9.14884Z" fill="#FE8D36"/></svg>
 								{{ order.tarif.name }}
@@ -136,6 +141,13 @@
 			</div>
 		</div>
 	</section>
+	<button class="modal_btn" data-target='modal_id' style='background: red; color: #fff; font-size: 24px; width: 100%;'>
+		Show modal
+	</button>
+	<div class="modal-new" id="modal_id">
+		<button class="close"></button>
+		<p style="color: black">[[comment]]</p>
+	</div>
 	<!-- end networks -->
 {% endblock %}
 {% block js %}
@@ -149,6 +161,7 @@
                     cur_network:{{ cur_network_id }},
                     cur_service:0,
                     cur_status:0,
+                    comment:'',
                 },
                 mounted: function () {
 
