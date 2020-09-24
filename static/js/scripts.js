@@ -5262,6 +5262,9 @@ $(function () {}),
         if (e.target.classList.contains('modal_btn')) {
             event.preventDefault()
             var modal = document.getElementById(e.target.getAttribute('data-target'));
+            var text = e.target.getAttribute('data-comment');
+
+            app.comment = text
             modal.classList.add('active');
             body.classList.add('overlay');
         }
