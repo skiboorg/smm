@@ -5264,7 +5264,7 @@ $(function () {}),
             var modal = document.getElementById(e.target.getAttribute('data-target'));
             var text = e.target.getAttribute('data-comment');
 
-            app.comment = text
+            app.comment = text.replace(/(?:\r\n|\r|\n)/g, ' | ')
             modal.classList.add('active');
             body.classList.add('overlay');
         }
