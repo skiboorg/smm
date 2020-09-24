@@ -109,7 +109,7 @@
 							</div>
                             {% if order.text %}
                             <div class="networks-main__col networks-main__col-3">
-                                <a href="#" @click.prevent="comment = '{{ order.text }}'" class="modal_btn" data-target='modal_id'>комментарий</a>
+                                <a href="#" @click.prevent="setComment('{{ order.text }}')" class="modal_btn" data-target='modal_id'>комментарий</a>
                             </div>
                             {% endif %}
 							<div class="networks-main__col networks-main__col-3">
@@ -168,6 +168,9 @@
                 },
                 watch: {},
                 methods: {
+                    setComment(text){
+                      this.comment = text
+                    },
                     setFilter(){
                       window.location.href = `/cp/orders?network=${this.cur_network}&service=${this.cur_service}&status=${this.cur_status}&filter=1`
                     },
